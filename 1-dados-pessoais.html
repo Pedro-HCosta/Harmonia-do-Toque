@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados Pessoais — Harmonia do Toque</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #FAF6EF; color: #3B2A1A; min-height: 100vh; display: flex; flex-direction: column; }
+
+  .header { background: white; padding: 16px 20px; border-bottom: 1px solid #F0E6D6; }
+  .back { font-size: 13px; color: #A0714F; text-decoration: none; display: block; margin-bottom: 12px; }
+  .progress { display: flex; gap: 6px; margin-bottom: 6px; }
+  .prog-dot { flex: 1; height: 5px; border-radius: 3px; }
+  .active { background: #3B2A1A; }
+  .done { background: #5C6B3A; }
+  .todo { background: #F0E6D6; }
+  .prog-label { font-size: 11px; color: #9E9688; }
+
+  .content { flex: 1; padding: 24px 20px; }
+  h2 { font-size: 24px; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #9E9688; margin-bottom: 24px; }
+
+  label { display: block; font-size: 11px; font-weight: bold; color: #A0714F; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; margin-top: 16px; }
+  label:first-of-type { margin-top: 0; }
+  input, select {
+    width: 100%; padding: 12px 14px; border: 1.5px solid #D4B896;
+    border-radius: 8px; font-size: 14px; background: white; color: #3B2A1A;
+    outline: none;
+  }
+  input:focus, select:focus { border-color: #6B4C30; }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+
+  .toggle-row { display: flex; gap: 8px; margin-top: 4px; }
+  .toggle-btn {
+    flex: 1; padding: 12px; border-radius: 8px; border: 1.5px solid #D4B896;
+    background: white; color: #9E9688; font-size: 13px; cursor: pointer;
+  }
+  .toggle-btn.selected { background: #3B2A1A; color: #F0E6D6; border-color: #3B2A1A; }
+
+  .error-msg { color: #c0392b; font-size: 12px; margin-top: 4px; display: none; }
+  input.error { border-color: #c0392b; }
+
+  .footer { padding: 16px 20px 32px; background: white; border-top: 1px solid #F0E6D6; }
+  .btn-primary {
+    width: 100%; padding: 16px; border-radius: 8px; border: none;
+    background: #3B2A1A; color: #F0E6D6; font-size: 15px;
+    font-weight: bold; cursor: pointer;
+  }
+  .btn-primary:hover { background: #2a1d0f; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="01-splash.html" class="back">← Voltar</a>
+    <div class="progress">
+      <div class="prog-dot active"></div>
+      <div class="prog-dot todo"></div>
+      <div class="prog-dot todo"></div>
+      <div class="prog-dot todo"></div>
+    </div>
+    <div class="prog-label">Etapa 1 de 4 — Seus dados</div>
+  </div>
+
+  <div class="content">
+    <h2>Olá, bem-vindo!</h2>
+    <div class="subtitle">Nos conte um pouco sobre você</div>
+
+    <label>Nome completo *</label>
+    <input type="text" id="nome" placeholder="Ex: Maria Silva">
+    <div class="error-msg" id="err-nome">Por favor, insira seu nome.</div>
+
+    <div class="row">
+      <div>
+        <label>Idade</label>
+        <input type="number" id="idade" placeholder="Ex: 32" min="1" max="120">
+      </div>
+      <div>
+        <label>Sexo</label>
+        <select id="sexo">
+          <option value="">Selecione</option>
+          <option>Feminino</option>
+          <option>Masculino</option>
+          <option>Prefiro não dizer</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Profissão</label>
+    <input type="text" id="profissao" placeholder="Ex: Professora, Designer...">
+
+    <label>Primeira vez aqui?</label>
+    <div class="toggle-row">
+      <button class="toggle-btn selected" id="tog-sim" onclick="selectToggle('sim')">Sim, primeira vez</button>
+      <button class="toggle-btn" id="tog-nao" onclick="selectToggle('nao')">Já vim antes</button>
+    </div>
+  </div>
+
+  <div class="footer">
+    <button class="btn-primary" onclick="avancar()">Continuar →</button>
+  </div>
+
+<script>
+  function selectToggle(val) {
+    document.getElementById('tog-sim').classList.toggle('selected', val === 'sim');
+    document.getElementById('tog-nao').classList.toggle('selected', val === 'nao');
+    sessionStorage.setItem('primeiraVez', val);
+  }
+
+  function avancar() {
+    const nome = document.getElementById('nome').value.trim();
+    if (!nome) {
+      document.getElementById('nome').classList.add('error');
+      document.getElementById('err-nome').style.display = 'block';
+      document.getElementById('nome').focus();
+      return;
+    }
+    // Salva dados
+    sessionStorage.setItem('nome', nome);
+    sessionStorage.setItem('idade', document.getElementById('idade').value);
+    sessionStorage.setItem('sexo', document.getElementById('sexo').value);
+    sessionStorage.setItem('profissao', document.getElementById('profissao').value);
+    window.location.href = '03-como-voce-esta.html';
+  }
+
+  document.getElementById('nome').addEventListener('input', function() {
+    this.classList.remove('error');
+    document.getElementById('err-nome').style.display = 'none';
+  });
+</script>
+</body>
+</html>
