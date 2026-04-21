@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gostos Musicais — Harmonia do Toque</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #FAF6EF; color: #3B2A1A; min-height: 100vh; display: flex; flex-direction: column; }
+
+  .header { background: white; padding: 16px 20px; border-bottom: 1px solid #F0E6D6; }
+  .back { font-size: 13px; color: #A0714F; text-decoration: none; display: block; margin-bottom: 12px; }
+  .progress { display: flex; gap: 6px; margin-bottom: 6px; }
+  .prog-dot { flex: 1; height: 5px; border-radius: 3px; }
+  .active { background: #3B2A1A; }
+  .done { background: #5C6B3A; }
+  .todo { background: #F0E6D6; }
+  .prog-label { font-size: 11px; color: #9E9688; }
+
+  .content { flex: 1; padding: 24px 20px; overflow-y: auto; }
+  h2 { font-size: 24px; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #9E9688; margin-bottom: 20px; line-height: 1.5; }
+
+  .section-label { font-size: 11px; font-weight: bold; color: #A0714F; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+
+  .genre-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; border-radius: 10px; border: 1.5px solid #D4B896;
+    background: white; margin-bottom: 8px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .genre-card.selected { border-color: #5C6B3A; background: #EBF0E3; }
+  .genre-icon { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
+  .genre-info { flex: 1; }
+  .genre-name { font-size: 14px; font-weight: bold; color: #3B2A1A; }
+  .genre-desc { font-size: 12px; color: #9E9688; margin-top: 2px; }
+  .genre-check {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid #D4B896; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: transparent;
+  }
+  .genre-card.selected .genre-check { background: #5C6B3A; border-color: #5C6B3A; color: white; }
+
+  .or-divider {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; color: #B8B0A6; text-transform: uppercase;
+    letter-spacing: 2px; margin: 18px 0 14px;
+  }
+  .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #F0E6D6; }
+
+  .free-box {
+    background: white; border: 1.5px solid #D4B896; border-radius: 10px; padding: 14px;
+  }
+  .free-box-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .free-box-icon { font-size: 16px; }
+  .free-box-title { font-size: 13px; font-weight: bold; color: #3B2A1A; }
+  .free-box-sub { font-size: 11px; color: #9E9688; }
+  textarea {
+    width: 100%; padding: 10px 0; border: none; border-top: 1px solid #F0E6D6;
+    font-family: Arial, sans-serif; font-size: 13px; color: #3B2A1A;
+    background: transparent; resize: none; outline: none; line-height: 1.6;
+  }
+  textarea::placeholder { color: #B8B0A6; }
+  .free-ai-note { font-size: 11px; color: #C17B3F; margin-top: 8px; padding-top: 8px; border-top: 1px solid #F0E6D6; }
+
+  .error-msg { color: #c0392b; font-size: 12px; margin-top: 8px; display: none; }
+
+  .footer { padding: 16px 20px 32px; background: white; border-top: 1px solid #F0E6D6; }
+  .btn-primary {
+    width: 100%; padding: 16px; border-radius: 8px; border: none;
+    background: #3B2A1A; color: #F0E6D6; font-size: 15px;
+    font-weight: bold; cursor: pointer;
+  }
+  .btn-primary:hover { background: #2a1d0f; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <a href="03-como-voce-esta.html" class="back">← Voltar</a>
+    <div class="progress">
+      <div class="prog-dot done"></div>
+      <div class="prog-dot done"></div>
+      <div class="prog-dot active"></div>
+      <div class="prog-dot todo"></div>
+    </div>
+    <div class="prog-label">Etapa 3 de 4 — Sua música</div>
+  </div>
+
+  <div class="content">
+    <h2>Que música te conecta?</h2>
+    <div class="subtitle">Selecione estilos ou descreva com suas palavras — ou os dois!</div>
+
+    <div class="section-label">Estilos</div>
+
+    <div class="genre-card" onclick="toggleGenre(this)" data-genre="Ambiente / Natureza">
+      <div class="genre-icon">🌿</div>
+      <div class="genre-info">
+        <div class="genre-name">Ambiente / Natureza</div>
+        <div class="genre-desc">Sons orgânicos, calmantes, sem letra</div>
+      </div>
+      <div class="genre-check">✓</div>
+    </div>
+
+    <div class="genre-card" onclick="toggleGenre(this)" data-genre="Clássico / Orquestral">
+      <div class="genre-icon">🎻</div>
+      <div class="genre-info">
+        <div class="genre-name">Clássico / Orquestral</div>
+        <div class="genre-desc">Piano, cordas, suave e introspectivo</div>
+      </div>
+      <div class="genre-check">✓</div>
+    </div>
+
+    <div class="genre-card" onclick="toggleGenre(this)" data-genre="Tibetano / Meditativo">
+      <div class="genre-icon">🪘</div>
+      <div class="genre-info">
+        <div class="genre-name">Tibetano / Meditativo</div>
+        <div class="genre-desc">Tigelas, mantras, frequências profundas</div>
+      </div>
+      <div class="genre-check">✓</div>
+    </div>
+
+    <div class="genre-card" onclick="toggleGenre(this)" data-genre="MPB / Bossa Nova">
+      <div class="genre-icon">🎸</div>
+      <div class="genre-info">
+        <div class="genre-name">MPB / Bossa Nova</div>
+        <div class="genre-desc">Música popular brasileira, suave</div>
+      </div>
+      <div class="genre-check">✓</div>
+    </div>
+
+    <div class="genre-card" onclick="toggleGenre(this)" data-genre="Jazz / Lo-fi">
+      <div class="genre-icon">🎷</div>
+      <div class="genre-info">
+        <div class="genre-name">Jazz / Lo-fi</div>
+        <div class="genre-desc">Instrumental relaxante e envolvente</div>
+      </div>
+      <div class="genre-check">✓</div>
+    </div>
+
+    <div class="or-divider">ou descreva livremente</div>
+
+    <div class="free-box">
+      <div class="free-box-header">
+        <div class="free-box-icon">✦</div>
+        <div>
+          <div class="free-box-title">Descreva o que você gosta</div>
+          <div class="free-box-sub">A IA vai analisar sua descrição</div>
+        </div>
+      </div>
+      <textarea id="desc-musica" rows="4"
+        placeholder="Ex: Gosto de música clássica, relaxo com vocais femininos suaves e som mais lento. Gosto de som da natureza, mas sem pássaros..."></textarea>
+      <div class="free-ai-note">✦ Será analisado pela IA junto com seu perfil completo</div>
+    </div>
+
+    <div class="error-msg" id="err-musica">Selecione ao menos um estilo ou descreva suas preferências.</div>
+    <div style="height: 8px;"></div>
+  </div>
+
+  <div class="footer">
+    <button class="btn-primary" onclick="avancar()">Analisar meu perfil →</button>
+  </div>
+
+<script>
+  function toggleGenre(el) {
+    el.classList.toggle('selected');
+    document.getElementById('err-musica').style.display = 'none';
+  }
+
+  function avancar() {
+    const genresSel = [...document.querySelectorAll('.genre-card.selected')].map(c => c.dataset.genre);
+    const desc = document.getElementById('desc-musica').value.trim();
+    if (genresSel.length === 0 && desc === '') {
+      document.getElementById('err-musica').style.display = 'block';
+      return;
+    }
+    sessionStorage.setItem('genres', JSON.stringify(genresSel));
+    sessionStorage.setItem('descMusica', desc);
+    window.location.href = '05-analisando.html';
+  }
+</script>
+</body>
+</html>
