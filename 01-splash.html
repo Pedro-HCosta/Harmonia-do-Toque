@@ -4,44 +4,111 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Harmonia do Toque</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: Arial, sans-serif;
-    background: #3B2A1A;
-    color: #F0E6D6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 24px;
+    background: #1a1a1a;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; font-family: 'Jost', sans-serif;
   }
-  .logo { font-size: 48px; margin-bottom: 16px; }
-  h1 { font-size: 32px; margin-bottom: 8px; text-align: center; }
-  .tagline { font-size: 14px; color: #D4B896; margin-bottom: 8px; text-align: center; }
-  .desc { font-size: 13px; color: #9E9688; text-align: center; max-width: 300px; line-height: 1.6; margin-bottom: 48px; }
-  .btn {
-    display: block; width: 100%; max-width: 320px;
-    padding: 16px; border-radius: 8px; border: none;
-    background: #C17B3F; color: white;
-    font-size: 15px; font-weight: bold; cursor: pointer;
-    text-align: center; text-decoration: none; margin-bottom: 12px;
+
+  /* ── PHONE SHELL ── */
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08);
+    display: flex; flex-direction: column; background: #3B2A1A;
   }
-  .btn:hover { background: #a8692f; }
-  .btn-outline {
-    background: transparent; border: 2px solid #D4B896; color: #D4B896;
+  .statusbar {
+    display: flex; justify-content: space-between;
+    padding: 14px 24px 6px; font-size: 12px; font-weight: 500;
+    background: #3B2A1A; color: #D4B896; flex-shrink: 0;
   }
-  .btn-outline:hover { background: rgba(212,184,150,0.1); }
+
+  /* ── SCREEN CONTENT ── */
+  .inner {
+    flex: 1; display: flex; flex-direction: column;
+    padding: 28px 32px 40px; position: relative; overflow: hidden;
+  }
+  .orb {
+    position: absolute; border-radius: 50%; pointer-events: none;
+  }
+  .orb1 { top:-50px; right:-50px; width:220px; height:220px; background:radial-gradient(circle,rgba(193,123,63,.22) 0%,transparent 70%); }
+  .orb2 { bottom:100px; left:-80px; width:280px; height:280px; background:radial-gradient(circle,rgba(92,107,58,.16) 0%,transparent 70%); }
+  .orb3 { top:40%; right:-30px; width:140px; height:140px; background:radial-gradient(circle,rgba(212,184,150,.1) 0%,transparent 70%); }
+
+  .app-icon {
+    width: 52px; height: 52px; background: rgba(193,123,63,.2);
+    border: 1px solid rgba(193,123,63,.3); border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 28px; position: relative; z-index: 1;
+  }
+  .tag {
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: #A0714F; margin-bottom: 10px; position: relative; z-index: 1;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; font-weight: 300; line-height: 1.05;
+    color: #F0E6D6; position: relative; z-index: 1;
+  }
+  .title em { font-style: italic; color: #D4B896; }
+  .desc {
+    font-size: 13px; font-weight: 300; color: #9E9688;
+    line-height: 1.7; margin-top: 16px; max-width: 260px;
+    position: relative; z-index: 1;
+  }
+  .pills {
+    display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .pill {
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 100px; padding: 5px 13px;
+    font-size: 10px; color: #D4B896; letter-spacing: 1px;
+  }
+  .spacer { flex: 1; }
+  .btn-main {
+    width: 100%; padding: 17px; border-radius: 100px; border: none;
+    background: #C17B3F; color: #FAF6EF;
+    font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 400;
+    letter-spacing: 2.5px; text-transform: uppercase; cursor: pointer;
+    text-align: center; text-decoration: none; display: block;
+    position: relative; z-index: 1;
+    transition: background .2s;
+  }
+  .btn-main:hover { background: #a8692f; }
+  .link {
+    text-align: center; font-size: 12px; font-weight: 300;
+    color: #9E9688; margin-top: 14px; cursor: pointer;
+    position: relative; z-index: 1;
+  }
+  .link span { color: #D4B896; text-decoration: underline; }
 </style>
 </head>
 <body>
-  <div class="logo">🌿</div>
-  <h1>Harmonia do Toque</h1>
-  <div class="tagline">Musicoterapia aplicada à massagem</div>
-  <div class="desc">Música personalizada com IA para cada momento da sua sessão de bem-estar.</div>
-
-  <a href="02-dados-pessoais.html" class="btn">Iniciar sessão</a>
-  <button class="btn btn-outline">Já tenho conta — entrar</button>
+<div class="phone">
+  <div class="statusbar">
+    <span>9:41</span>
+    <span style="letter-spacing:2px;">● ● ●</span>
+  </div>
+  <div class="inner">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+    <div class="app-icon">🌿</div>
+    <div class="tag">Musicoterapia aplicada</div>
+    <div class="title">Harmonia<br><em>do Toque</em></div>
+    <div class="desc">Música personalizada com IA para cada momento da sua sessão de bem-estar.</div>
+    <div class="pills">
+      <span class="pill">Bem-estar</span>
+      <span class="pill">Personalizado</span>
+      <span class="pill">IA</span>
+    </div>
+    <div class="spacer"></div>
+    <a href="02-dados-pessoais.html" class="btn-main">Iniciar sessão</a>
+    <div class="link">Já tenho conta — <span>entrar</span></div>
+  </div>
+</div>
 </body>
 </html>

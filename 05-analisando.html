@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analisando — Harmonia do Toque</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a1a; display: flex; justify-content: center;
+    align-items: center; min-height: 100vh; font-family: 'Jost', sans-serif;
+  }
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+    display: flex; flex-direction: column; background: #FAF6EF;
+  }
+  .statusbar {
+    display: flex; justify-content: space-between;
+    padding: 14px 24px 6px; font-size: 12px; font-weight: 500;
+    background: #FAF6EF; color: #6B4C30; flex-shrink: 0;
+  }
+
+  .inner {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 32px; text-align: center;
+  }
+
+  .loading-icon {
+    width: 72px; height: 72px; border-radius: 22px; background: #3B2A1A;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 24px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(59,42,26,.3); }
+    50% { transform: scale(1.04); box-shadow: 0 0 0 12px rgba(59,42,26,0); }
+  }
+
+  .loading-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 400; color: #3B2A1A; margin-bottom: 10px;
+  }
+  .loading-title em { font-style: italic; color: #6B4C30; }
+  .loading-sub {
+    font-size: 12px; font-weight: 300; color: #9E9688;
+    line-height: 1.7; margin-bottom: 32px; max-width: 260px;
+  }
+
+  .bar-wrap { width: 100%; margin-bottom: 6px; }
+  .bar-track { width: 100%; height: 3px; background: #F0E6D6; border-radius: 2px; overflow: hidden; }
+  .bar-fill { height: 100%; background: #5C6B3A; border-radius: 2px; width: 0%; transition: width .4s ease; }
+  .bar-pct { font-size: 10px; color: #B8B0A6; text-align: right; margin-top: 4px; }
+
+  .steps { width: 100%; margin-top: 28px; text-align: left; }
+  .step {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid #F0E6D6;
+    font-size: 12px; font-weight: 300; color: #B8B0A6; transition: color .3s;
+  }
+  .step:last-child { border-bottom: none; }
+  .step-icon { width: 18px; text-align: center; font-size: 11px; }
+  .step.done { color: #5C6B3A; }
+  .step.running { color: #3B2A1A; font-weight: 400; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="statusbar">
+    <span>9:46</span>
+    <span style="letter-spacing:2px;">● ● ●</span>
+  </div>
+
+  <div class="inner">
+    <div class="loading-icon">🎵</div>
+    <div class="loading-title">Criando sua<br><em>experiência</em></div>
+    <div class="loading-sub">A IA está analisando seu perfil e selecionando as músicas ideais para este momento.</div>
+
+    <div class="bar-wrap">
+      <div class="bar-track"><div class="bar-fill" id="bar"></div></div>
+      <div class="bar-pct"><span id="pct">0%</span></div>
+    </div>
+
+    <div class="steps">
+      <div class="step" id="s1"><div class="step-icon">○</div><span>Perfil emocional mapeado</span></div>
+      <div class="step" id="s2"><div class="step-icon">○</div><span>Preferências musicais analisadas</span></div>
+      <div class="step" id="s3"><div class="step-icon">○</div><span>Selecionando repertório...</span></div>
+      <div class="step" id="s4"><div class="step-icon">○</div><span>Ajustando BPM e tom</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const steps = [
+    { id:'s1', pct:25, delay:500 },
+    { id:'s2', pct:55, delay:1100 },
+    { id:'s3', pct:78, delay:1800 },
+    { id:'s4', pct:100, delay:2500 },
+  ];
+
+  steps.forEach((s, i) => {
+    setTimeout(() => {
+      if (i > 0) {
+        const prev = document.getElementById(steps[i-1].id);
+        prev.classList.remove('running'); prev.classList.add('done');
+        prev.querySelector('.step-icon').textContent = '✓';
+      }
+      const el = document.getElementById(s.id);
+      el.classList.add('running');
+      el.querySelector('.step-icon').textContent = '◌';
+      document.getElementById('bar').style.width = s.pct + '%';
+      document.getElementById('pct').textContent = s.pct + '%';
+    }, s.delay);
+  });
+
+  setTimeout(() => {
+    const last = document.getElementById('s4');
+    last.classList.remove('running'); last.classList.add('done');
+    last.querySelector('.step-icon').textContent = '✓';
+    setTimeout(() => window.location.href = '06-resultado.html', 500);
+  }, 3200);
+</script>
+</body>
+</html>

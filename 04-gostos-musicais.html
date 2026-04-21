@@ -4,95 +4,125 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gostos Musicais — Harmonia do Toque</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; background: #FAF6EF; color: #3B2A1A; min-height: 100vh; display: flex; flex-direction: column; }
+  body {
+    background: #1a1a1a; display: flex; justify-content: center;
+    align-items: center; min-height: 100vh; font-family: 'Jost', sans-serif;
+  }
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+    display: flex; flex-direction: column; background: #FAF6EF;
+  }
+  .statusbar {
+    display: flex; justify-content: space-between;
+    padding: 14px 24px 6px; font-size: 12px; font-weight: 500;
+    background: #FAF6EF; color: #6B4C30; flex-shrink: 0;
+  }
+  .app-header {
+    background: #FAF6EF; padding: 14px 24px 12px;
+    border-bottom: 1px solid #F0E6D6; flex-shrink: 0;
+  }
+  .back { font-size: 12px; color: #A0714F; text-decoration: none; display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+  .progress { display: flex; gap: 5px; }
+  .prog-dot { height: 4px; flex: 1; border-radius: 2px; }
+  .p-done { background: #5C6B3A; }
+  .p-active { background: #3B2A1A; }
+  .p-todo { background: #F0E6D6; }
+  .prog-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #B8B0A6; margin-top: 7px; }
 
-  .header { background: white; padding: 16px 20px; border-bottom: 1px solid #F0E6D6; }
-  .back { font-size: 13px; color: #A0714F; text-decoration: none; display: block; margin-bottom: 12px; }
-  .progress { display: flex; gap: 6px; margin-bottom: 6px; }
-  .prog-dot { flex: 1; height: 5px; border-radius: 3px; }
-  .active { background: #3B2A1A; }
-  .done { background: #5C6B3A; }
-  .todo { background: #F0E6D6; }
-  .prog-label { font-size: 11px; color: #9E9688; }
+  .scroll { flex: 1; overflow-y: auto; padding: 22px 24px 16px; }
+  .scroll::-webkit-scrollbar { display: none; }
 
-  .content { flex: 1; padding: 24px 20px; overflow-y: auto; }
-  h2 { font-size: 24px; margin-bottom: 6px; }
-  .subtitle { font-size: 13px; color: #9E9688; margin-bottom: 20px; line-height: 1.5; }
+  .screen-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 400; color: #3B2A1A; margin-bottom: 6px; line-height: 1.2; }
+  .screen-title em { font-style: italic; color: #6B4C30; }
+  .screen-sub { font-size: 12px; font-weight: 300; color: #9E9688; line-height: 1.6; margin-bottom: 20px; }
 
-  .section-label { font-size: 11px; font-weight: bold; color: #A0714F; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .section-label { font-size: 10px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #A0714F; margin-bottom: 10px; display: block; }
 
   .genre-card {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px; border-radius: 10px; border: 1.5px solid #D4B896;
-    background: white; margin-bottom: 8px; cursor: pointer;
-    transition: all 0.15s;
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+    border-radius: 12px; border: 1.5px solid #D4B896; background: white;
+    margin-bottom: 8px; cursor: pointer; transition: all .2s; user-select: none;
   }
+  .genre-card:active { transform: scale(.98); }
   .genre-card.selected { border-color: #5C6B3A; background: #EBF0E3; }
-  .genre-icon { font-size: 22px; width: 36px; text-align: center; flex-shrink: 0; }
-  .genre-info { flex: 1; }
-  .genre-name { font-size: 14px; font-weight: bold; color: #3B2A1A; }
-  .genre-desc { font-size: 12px; color: #9E9688; margin-top: 2px; }
-  .genre-check {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid #D4B896; flex-shrink: 0;
+  .genre-icon {
+    width: 36px; height: 36px; border-radius: 10px; background: #F0E6D6;
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: transparent;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .genre-card.selected .genre-icon { background: rgba(92,107,58,.2); }
+  .genre-info { flex: 1; }
+  .genre-name { font-size: 13px; font-weight: 400; color: #3B2A1A; }
+  .genre-desc { font-size: 10px; font-weight: 300; color: #9E9688; margin-top: 1px; }
+  .genre-check {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #D4B896;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: transparent; transition: all .2s; flex-shrink: 0;
   }
   .genre-card.selected .genre-check { background: #5C6B3A; border-color: #5C6B3A; color: white; }
 
   .or-divider {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 11px; color: #B8B0A6; text-transform: uppercase;
-    letter-spacing: 2px; margin: 18px 0 14px;
+    display: flex; align-items: center; gap: 10px; margin: 16px 0 12px;
+    font-size: 10px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: #B8B0A6;
   }
   .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: #F0E6D6; }
 
-  .free-box {
-    background: white; border: 1.5px solid #D4B896; border-radius: 10px; padding: 14px;
-  }
+  .free-box { background: white; border: 1.5px solid #D4B896; border-radius: 12px; padding: 13px 15px; }
   .free-box-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .free-box-icon { font-size: 16px; }
-  .free-box-title { font-size: 13px; font-weight: bold; color: #3B2A1A; }
-  .free-box-sub { font-size: 11px; color: #9E9688; }
-  textarea {
-    width: 100%; padding: 10px 0; border: none; border-top: 1px solid #F0E6D6;
-    font-family: Arial, sans-serif; font-size: 13px; color: #3B2A1A;
-    background: transparent; resize: none; outline: none; line-height: 1.6;
+  .free-box-icon { width: 28px; height: 28px; border-radius: 8px; background: #F0E6D6; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .free-box-title { font-size: 12px; font-weight: 500; color: #3B2A1A; }
+  .free-box-sub { font-size: 10px; font-weight: 300; color: #9E9688; }
+  .free-textarea {
+    width: 100%; border: none; border-top: 1px solid #F0E6D6; background: transparent;
+    font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300;
+    color: #3B2A1A; resize: none; outline: none; line-height: 1.6; padding-top: 10px;
   }
-  textarea::placeholder { color: #B8B0A6; }
-  .free-ai-note { font-size: 11px; color: #C17B3F; margin-top: 8px; padding-top: 8px; border-top: 1px solid #F0E6D6; }
+  .free-textarea::placeholder { color: #B8B0A6; }
+  .free-ai-tag {
+    display: flex; align-items: center; gap: 5px; margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid #F0E6D6; font-size: 9px; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #C17B3F;
+  }
+  .error-msg { font-size: 10px; color: #c0392b; margin-top: 8px; display: none; }
 
-  .error-msg { color: #c0392b; font-size: 12px; margin-top: 8px; display: none; }
-
-  .footer { padding: 16px 20px 32px; background: white; border-top: 1px solid #F0E6D6; }
+  .footer { padding: 14px 24px 28px; border-top: 1px solid #F0E6D6; background: #FAF6EF; flex-shrink: 0; }
   .btn-primary {
-    width: 100%; padding: 16px; border-radius: 8px; border: none;
-    background: #3B2A1A; color: #F0E6D6; font-size: 15px;
-    font-weight: bold; cursor: pointer;
+    width: 100%; padding: 16px; border-radius: 100px; border: none;
+    background: #3B2A1A; color: #F0E6D6; font-family: 'Jost', sans-serif;
+    font-size: 12px; letter-spacing: 2.5px; text-transform: uppercase;
+    cursor: pointer; transition: background .2s;
   }
   .btn-primary:hover { background: #2a1d0f; }
 </style>
 </head>
 <body>
+<div class="phone">
+  <div class="statusbar">
+    <span>9:45</span>
+    <span style="letter-spacing:2px;">● ● ●</span>
+  </div>
 
-  <div class="header">
+  <div class="app-header">
     <a href="03-como-voce-esta.html" class="back">← Voltar</a>
     <div class="progress">
-      <div class="prog-dot done"></div>
-      <div class="prog-dot done"></div>
-      <div class="prog-dot active"></div>
-      <div class="prog-dot todo"></div>
+      <div class="prog-dot p-done"></div>
+      <div class="prog-dot p-done"></div>
+      <div class="prog-dot p-active"></div>
+      <div class="prog-dot p-todo"></div>
     </div>
     <div class="prog-label">Etapa 3 de 4 — Sua música</div>
   </div>
 
-  <div class="content">
-    <h2>Que música te conecta?</h2>
-    <div class="subtitle">Selecione estilos ou descreva com suas palavras — ou os dois!</div>
+  <div class="scroll">
+    <div class="screen-title">Que música<br><em>te conecta?</em></div>
+    <div class="screen-sub">Selecione estilos ou descreva com suas palavras — ou os dois!</div>
 
-    <div class="section-label">Estilos</div>
+    <span class="section-label">Estilos</span>
 
     <div class="genre-card" onclick="toggleGenre(this)" data-genre="Ambiente / Natureza">
       <div class="genre-icon">🌿</div>
@@ -102,7 +132,6 @@
       </div>
       <div class="genre-check">✓</div>
     </div>
-
     <div class="genre-card" onclick="toggleGenre(this)" data-genre="Clássico / Orquestral">
       <div class="genre-icon">🎻</div>
       <div class="genre-info">
@@ -111,7 +140,6 @@
       </div>
       <div class="genre-check">✓</div>
     </div>
-
     <div class="genre-card" onclick="toggleGenre(this)" data-genre="Tibetano / Meditativo">
       <div class="genre-icon">🪘</div>
       <div class="genre-info">
@@ -120,7 +148,6 @@
       </div>
       <div class="genre-check">✓</div>
     </div>
-
     <div class="genre-card" onclick="toggleGenre(this)" data-genre="MPB / Bossa Nova">
       <div class="genre-icon">🎸</div>
       <div class="genre-info">
@@ -129,7 +156,6 @@
       </div>
       <div class="genre-check">✓</div>
     </div>
-
     <div class="genre-card" onclick="toggleGenre(this)" data-genre="Jazz / Lo-fi">
       <div class="genre-icon">🎷</div>
       <div class="genre-info">
@@ -149,25 +175,25 @@
           <div class="free-box-sub">A IA vai analisar sua descrição</div>
         </div>
       </div>
-      <textarea id="desc-musica" rows="4"
+      <textarea class="free-textarea" id="desc-musica" rows="4"
         placeholder="Ex: Gosto de música clássica, relaxo com vocais femininos suaves e som mais lento. Gosto de som da natureza, mas sem pássaros..."></textarea>
-      <div class="free-ai-note">✦ Será analisado pela IA junto com seu perfil completo</div>
+      <div class="free-ai-tag">✦ Será analisado pela IA junto com seu perfil completo</div>
     </div>
 
     <div class="error-msg" id="err-musica">Selecione ao menos um estilo ou descreva suas preferências.</div>
-    <div style="height: 8px;"></div>
+    <div style="height:8px;"></div>
   </div>
 
   <div class="footer">
     <button class="btn-primary" onclick="avancar()">Analisar meu perfil →</button>
   </div>
+</div>
 
 <script>
   function toggleGenre(el) {
     el.classList.toggle('selected');
     document.getElementById('err-musica').style.display = 'none';
   }
-
   function avancar() {
     const genresSel = [...document.querySelectorAll('.genre-card.selected')].map(c => c.dataset.genre);
     const desc = document.getElementById('desc-musica').value.trim();

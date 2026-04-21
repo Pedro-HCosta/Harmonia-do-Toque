@@ -4,85 +4,115 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resultado — Harmonia do Toque</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; background: #3B2A1A; color: #F0E6D6; min-height: 100vh; display: flex; flex-direction: column; }
-
-  .header { padding: 20px 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .ai-badge {
-    display: inline-block; background: rgba(193,123,63,0.2); border: 1px solid rgba(193,123,63,0.4);
-    border-radius: 100px; padding: 4px 12px; font-size: 11px; color: #C17B3F;
-    letter-spacing: 1px; margin-bottom: 10px;
+  body {
+    background: #1a1a1a; display: flex; justify-content: center;
+    align-items: center; min-height: 100vh; font-family: 'Jost', sans-serif;
   }
-  .header h2 { font-size: 26px; font-weight: normal; line-height: 1.2; }
-  .header h2 em { font-style: italic; color: #D4B896; }
-  .header-sub { font-size: 12px; color: #9E9688; margin-top: 6px; }
+  .phone {
+    width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+    display: flex; flex-direction: column; background: #3B2A1A;
+  }
+  .statusbar {
+    display: flex; justify-content: space-between;
+    padding: 14px 24px 6px; font-size: 12px; font-weight: 500;
+    background: #3B2A1A; color: #D4B896; flex-shrink: 0;
+  }
 
-  .content { flex: 1; padding: 16px 20px; overflow-y: auto; }
+  /* ── HEADER ── */
+  .result-header {
+    padding: 16px 24px 18px; border-bottom: 1px solid rgba(255,255,255,.07); flex-shrink: 0;
+  }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(193,123,63,.2); border: 1px solid rgba(193,123,63,.35);
+    border-radius: 100px; padding: 4px 13px; font-size: 9px;
+    letter-spacing: 2px; text-transform: uppercase; color: #C17B3F; margin-bottom: 10px;
+  }
+  .result-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; font-weight: 300; color: #F0E6D6; line-height: 1.2;
+  }
+  .result-title em { font-style: italic; color: #D4B896; }
+  .result-sub { font-size: 11px; font-weight: 300; color: #9E9688; margin-top: 7px; }
+
+  /* ── SCROLL ── */
+  .scroll { flex: 1; overflow-y: auto; padding: 18px 24px; }
+  .scroll::-webkit-scrollbar { display: none; }
 
   .reasoning {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px; padding: 14px; margin-bottom: 16px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08);
+    border-radius: 12px; padding: 13px 15px; margin-bottom: 18px;
   }
-  .reasoning-label { font-size: 10px; color: #A0714F; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; }
-  .reasoning-text { font-size: 13px; color: #9E9688; line-height: 1.6; font-style: italic; }
+  .reasoning-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #A0714F; margin-bottom: 6px; }
+  .reasoning-text { font-size: 12px; font-weight: 300; color: #9E9688; line-height: 1.6; font-style: italic; }
 
   .music-card {
-    border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
-    border: 1.5px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.05);
-    transition: all 0.2s;
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer;
+    border: 1.5px solid rgba(255,255,255,.08); background: rgba(255,255,255,.05);
+    transition: all .2s;
   }
-  .music-card:hover { background: rgba(255,255,255,0.09); }
-  .music-card.highlight { background: rgba(92,107,58,0.25); border-color: rgba(92,107,58,0.5); }
-  .music-card.selected { background: rgba(193,123,63,0.2); border-color: rgba(193,123,63,0.6); }
+  .music-card:hover { background: rgba(255,255,255,.09); }
+  .music-card.highlight { background: rgba(92,107,58,.25); border-color: rgba(92,107,58,.5); }
+  .music-card.selected { background: rgba(193,123,63,.2); border-color: rgba(193,123,63,.6); }
 
   .mc-row { display: flex; align-items: center; gap: 12px; }
   .mc-icon {
-    width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,0.1);
+    width: 48px; height: 48px; border-radius: 12px; background: rgba(255,255,255,.1);
     display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
   }
-  .music-card.highlight .mc-icon { background: rgba(92,107,58,0.3); }
-  .mc-title { font-size: 17px; color: #F0E6D6; }
-  .mc-sub { font-size: 11px; color: #9E9688; margin-top: 3px; }
+  .music-card.highlight .mc-icon { background: rgba(92,107,58,.3); }
+  .mc-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: #F0E6D6; }
+  .mc-sub { font-size: 10px; font-weight: 300; color: #9E9688; margin-top: 2px; }
   .mc-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-  .mc-tag {
-    font-size: 10px; padding: 3px 9px; border-radius: 100px;
-    letter-spacing: 1px; text-transform: uppercase;
-  }
-  .tag-green { background: rgba(92,107,58,0.3); color: #8FA672; }
-  .tag-amber { background: rgba(193,123,63,0.25); color: #C17B3F; }
-  .tag-sand { background: rgba(212,184,150,0.12); color: #D4B896; }
-  .mc-reason { font-size: 11px; color: #9E9688; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.07); line-height: 1.5; font-style: italic; }
-  .mc-selected-note { font-size: 11px; color: #C17B3F; margin-top: 6px; display: none; }
+  .mc-tag { font-size: 9px; padding: 3px 9px; border-radius: 100px; letter-spacing: 1px; text-transform: uppercase; }
+  .tag-green { background: rgba(92,107,58,.3); color: #8FA672; }
+  .tag-amber { background: rgba(193,123,63,.25); color: #C17B3F; }
+  .tag-sand { background: rgba(212,184,150,.12); color: #D4B896; }
+  .mc-reason { font-size: 10px; font-weight: 300; color: #9E9688; margin-top: 9px; padding-top: 9px; border-top: 1px solid rgba(255,255,255,.07); line-height: 1.5; font-style: italic; }
+  .mc-selected-note { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: #C17B3F; margin-top: 6px; display: none; }
   .music-card.selected .mc-selected-note { display: block; }
 
-  .footer { padding: 14px 20px 32px; border-top: 1px solid rgba(255,255,255,0.07); }
-  .btn-start {
-    width: 100%; padding: 16px; border-radius: 8px; border: none;
-    background: #C17B3F; color: white; font-size: 15px;
-    font-weight: bold; cursor: pointer; transition: background 0.2s;
+  /* ── FOOTER ── */
+  .footer {
+    padding: 13px 24px 28px; border-top: 1px solid rgba(255,255,255,.07);
+    background: #3B2A1A; flex-shrink: 0;
   }
-  .btn-start:disabled { background: rgba(193,123,63,0.3); color: rgba(255,255,255,0.4); cursor: default; }
+  .btn-start {
+    width: 100%; padding: 16px; border-radius: 100px; border: none;
+    background: #C17B3F; color: white; font-family: 'Jost', sans-serif;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: background .2s;
+  }
+  .btn-start:disabled { background: rgba(193,123,63,.3); color: rgba(255,255,255,.4); cursor: default; }
   .btn-start:not(:disabled):hover { background: #a8692f; }
-  .restart-link { text-align: center; font-size: 12px; color: #9E9688; margin-top: 12px; cursor: pointer; }
-  .restart-link a { color: #D4B896; }
+  .restart-link { text-align: center; font-size: 11px; color: #9E9688; margin-top: 12px; }
+  .restart-link a { color: #D4B896; text-decoration: none; }
 </style>
 </head>
 <body>
-
-  <div class="header">
-    <div class="ai-badge">✦ Análise IA</div>
-    <h2>Sua trilha<br><em>personalizada</em></h2>
-    <div class="header-sub" id="header-sub">Baseado no seu perfil de hoje · 3 sugestões</div>
+<div class="phone">
+  <div class="statusbar">
+    <span>9:47</span>
+    <span style="letter-spacing:2px;">● ● ●</span>
   </div>
 
-  <div class="content">
+  <div class="result-header">
+    <div class="ai-badge">✦ Análise IA</div>
+    <div class="result-title">Sua trilha<br><em>personalizada</em></div>
+    <div class="result-sub" id="result-sub">Baseado no seu perfil de hoje · 3 sugestões</div>
+  </div>
+
+  <div class="scroll">
     <div class="reasoning">
       <div class="reasoning-label">Raciocínio da IA</div>
       <div class="reasoning-text" id="reasoning">Carregando análise...</div>
     </div>
 
-    <div class="music-card highlight" id="mc1" onclick="selectCard(this, 1)">
+    <div class="music-card highlight" id="mc1" onclick="selectCard(this,1)">
       <div class="mc-row">
         <div class="mc-icon">🌿</div>
         <div>
@@ -96,10 +126,10 @@
         <span class="mc-tag tag-sand">30 min</span>
       </div>
       <div class="mc-reason">"Sons orgânicos reduzem o cortisol e auxiliam no relaxamento muscular profundo."</div>
-      <div class="mc-selected-note">✦ Selecionado — toque em iniciar sessão</div>
+      <div class="mc-selected-note">✦ selecionado — toque em iniciar sessão</div>
     </div>
 
-    <div class="music-card" id="mc2" onclick="selectCard(this, 2)">
+    <div class="music-card" id="mc2" onclick="selectCard(this,2)">
       <div class="mc-row">
         <div class="mc-icon">🎻</div>
         <div>
@@ -112,10 +142,10 @@
         <span class="mc-tag tag-sand">Introspectivo</span>
       </div>
       <div class="mc-reason">"Andamento lento e melodias suaves favorecem a desconexão mental do estresse."</div>
-      <div class="mc-selected-note">✦ Selecionado — toque em iniciar sessão</div>
+      <div class="mc-selected-note">✦ selecionado — toque em iniciar sessão</div>
     </div>
 
-    <div class="music-card" id="mc3" onclick="selectCard(this, 3)">
+    <div class="music-card" id="mc3" onclick="selectCard(this,3)">
       <div class="mc-row">
         <div class="mc-icon">🪘</div>
         <div>
@@ -128,7 +158,7 @@
         <span class="mc-tag tag-sand">Mindfulness</span>
       </div>
       <div class="mc-reason">"Frequências baixas estimulam ondas theta, promovendo relaxamento e sono reparador."</div>
-      <div class="mc-selected-note">✦ Selecionado — toque em iniciar sessão</div>
+      <div class="mc-selected-note">✦ selecionado — toque em iniciar sessão</div>
     </div>
   </div>
 
@@ -136,46 +166,40 @@
     <button class="btn-start" id="btn-start" disabled onclick="iniciar()">Selecione uma trilha acima</button>
     <div class="restart-link">Nova sessão? <a href="01-splash.html">Recomeçar</a></div>
   </div>
+</div>
 
 <script>
   let selectedCard = null;
 
-  // Monta raciocínio com base nos dados salvos
   const nome = sessionStorage.getItem('nome') || 'você';
   const chips = JSON.parse(sessionStorage.getItem('chipsSintomas') || '[]');
   const sintomas = sessionStorage.getItem('sintomas') || '';
   const genres = JSON.parse(sessionStorage.getItem('genres') || '[]');
   const descMusica = (sessionStorage.getItem('descMusica') || '').toLowerCase();
 
-  document.getElementById('header-sub').textContent = `Baseado no perfil de ${nome.split(' ')[0]} · 3 sugestões`;
+  document.getElementById('result-sub').textContent = `Baseado no perfil de ${nome.split(' ')[0]} · 3 sugestões`;
 
-  // Ajusta título da música 1 se mencionou "sem pássaros"
-  if (descMusica.includes('pássaro') || descMusica.includes('passaro')) {
+  if (descMusica.includes('pássaro') || descMusica.includes('passaro'))
     document.getElementById('mc1-title').textContent = 'Floresta em Silêncio — Ambient';
-  }
-  // Ajusta título da música 2 se mencionou vocal feminino
-  if (descMusica.includes('vocal') || descMusica.includes('feminino') || descMusica.includes('feminina')) {
+  if (descMusica.includes('vocal') || descMusica.includes('feminino') || descMusica.includes('feminina'))
     document.getElementById('mc2-title').textContent = 'Vozes Suaves — Canto Etéreo';
-  }
 
-  // Monta raciocínio dinâmico
   const issues = chips.length > 0
-    ? chips.slice(0, 3).join(', ').toLowerCase()
-    : sintomas.length > 0 ? sintomas.substring(0, 50) + '...' : 'bem-estar geral';
+    ? chips.slice(0,3).join(', ').toLowerCase()
+    : sintomas.length > 0 ? sintomas.substring(0,50) + '...' : 'bem-estar geral';
 
   let reason = `Com base no perfil de ${nome.split(' ')[0]} — ${issues} — `;
-  if (genres.includes('Ambiente / Natureza') || descMusica.includes('natureza')) {
+  if (genres.includes('Ambiente / Natureza') || descMusica.includes('natureza'))
     reason += 'priorizei sons orgânicos e baixo BPM para reduzir o cortisol e facilitar o relaxamento muscular.';
-  } else if (genres.includes('Clássico / Orquestral') || descMusica.includes('clássic')) {
+  else if (genres.includes('Clássico / Orquestral') || descMusica.includes('clássic'))
     reason += 'selecionei composições instrumentais suaves que favorecem a desconexão mental do estresse.';
-  } else if (genres.includes('Tibetano / Meditativo')) {
+  else if (genres.includes('Tibetano / Meditativo'))
     reason += 'escolhi frequências profundas que estimulam ondas theta e promovem relaxamento total.';
-  } else {
+  else
     reason += 'montei um repertório equilibrado entre fluxo melódico e calma para maximizar o relaxamento.';
-  }
+
   document.getElementById('reasoning').textContent = `"${reason}"`;
 
-  // Salva trilha selecionada para tela de sessão
   const trackData = {
     1: { name: document.getElementById('mc1-title').textContent, sub: 'Ambient Nature · 54 BPM', tags: ['Relaxante','54 BPM','Ambiente'] },
     2: { name: document.getElementById('mc2-title').textContent, sub: 'Clássico · 62 BPM', tags: ['Melódico','62 BPM','Clássico'] },
